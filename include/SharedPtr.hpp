@@ -3,8 +3,8 @@
 //
 // Copyright 2020 mrmamongo
 
-#ifndef SHARED_PTR_SHAREDPTR_HPP_
-#define SHARED_PTR_SHAREDPTR_HPP_
+#ifndef INCLUDE_SHAREDPTR_HPP_
+#define INCLUDE_SHAREDPTR_HPP_
 
 #include <vector>
 #include <memory>
@@ -19,8 +19,8 @@ class SharedPtr {
  public:
   SharedPtr() noexcept: ptr(nullptr), counter(nullptr) {}
 
-  explicit SharedPtr (T* p){
-      std::unique_ptr<T> temp (p);
+  explicit SharedPtr(T* p){
+      std::unique_ptr<T> temp(p);
 
       counter = new s_ptr_counter<T>(temp.get());
 
@@ -106,4 +106,4 @@ class SharedPtr {
   s_ptr_counter<T>* counter;
 };
 
-#endif  // SHARED_PTR_SHAREDPTR_HPP_
+#endif  // INCLUDE_SHAREDPTR_HPP_

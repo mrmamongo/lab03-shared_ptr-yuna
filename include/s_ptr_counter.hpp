@@ -13,7 +13,7 @@
 template <typename T>
 class s_ptr_counter {
  public:
- explicit s_ptr_counter(T* p): ptr(p), counter(1) {};
+ explicit s_ptr_counter(T* p): ptr(p), counter(1) {}
 
   void AddPointer() {
       ++counter;
@@ -24,8 +24,7 @@ class s_ptr_counter {
         ptr = nullptr;
         if (counter == 0){
           delete this;
-        }
-        else
+        } else
           --counter;
       }
   }
