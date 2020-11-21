@@ -34,10 +34,10 @@ class SharedPtr {
       counter = r.counter;
       AddPoint();
   }
-  ~SharedPtr(){
+  ~SharedPtr() noexcept{
       Clear();
   }
-  auto operator=(const SharedPtr& r)  -> SharedPtr& {
+  auto operator=(const SharedPtr& r) noexcept -> SharedPtr& {
       Clear();
 
       ptr = r.ptr;
@@ -92,7 +92,9 @@ class SharedPtr {
 
  private:
   void AddPoint(){
-      counter->AddPointer();
+      if(counter) {
+        counter->AddPointer();
+      }
   }
 
   void Clear() {

@@ -15,18 +15,18 @@ class s_ptr_counter {
  public:
  explicit s_ptr_counter(T* p): ptr(p), counter(1) {}
 
-  void AddPointer() {
+  void AddPointer() noexcept {
       ++counter;
   }
 
-  void Clear() {
+  void Clear() noexcept {
         if (--counter) {
           delete ptr;
           delete this;
         }
   }
 
-  auto GetCount() -> size_t {
+  auto GetCount() noexcept -> size_t {
     return counter.load();
   }
 
