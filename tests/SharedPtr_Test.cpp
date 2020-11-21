@@ -64,8 +64,8 @@ TEST(SharedPtr_Test, Swap_Test) {
   EXPECT_EQ(pvalue1.GetCount(), 3);
   EXPECT_EQ(pvalue3.GetCount(), 2);
 
-  EXPECT_EQ(*pvalue1 == 10);
-  EXPECT_EQ(*pvalue3 == 5);
+  EXPECT_EQ(*pvalue1, 10);
+  EXPECT_EQ(*pvalue3, 5);
 }
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
