@@ -9,11 +9,12 @@
  * =================CONSTRUCTORS=================
  */
 template <typename T>
-SharedPtr<T>::SharedPtr<typename T>() noexcept
-    : ptr(nullptr), counter(nullptr) {}
+SharedPtr<T>::SharedPtr<T>() noexcept
+    : ptr(nullptr), counter(nullptr) {
 
+}
 template <typename T>
-SharedPtr<T>::SharedPtr<typename T>(T *p) {
+SharedPtr<T>::SharedPtr<T>(T *p) {
   std::unique_ptr<T> temp(p);
 
   counter = new s_ptr_counter<T>(temp.get());
@@ -22,13 +23,13 @@ SharedPtr<T>::SharedPtr<typename T>(T *p) {
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr<typename T>(SharedPtr<T> &&r) noexcept {
+SharedPtr<T>::SharedPtr<T>(SharedPtr<T> &&r) noexcept {
   ptr = std::move(r.ptr);
   counter = std::move(r.counter);
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr<typename T>(const SharedPtr<T> &r)
+SharedPtr<T>::SharedPtr<T>(const SharedPtr<T> &r)
     : ptr(r.ptr), counter(r.counter) {
   AddPoint();
 }
@@ -42,7 +43,8 @@ SharedPtr<T>::~SharedPtr<T>() noexcept {
  */
 
 template <typename T>
-auto SharedPtr<T>::operator=(SharedPtr<T> &&r) noexcept -> SharedPtr<T> & {
+auto SharedPtr<T>::operator=(const SharedPtr<T> &r)
+    noexcept -> SharedPtr<T> & {
   Clear();
 
   ptr = r.ptr;
@@ -54,7 +56,8 @@ auto SharedPtr<T>::operator=(SharedPtr<T> &&r) noexcept -> SharedPtr<T> & {
 }
 
 template <typename T>
-auto SharedPtr<T>::operator=(SharedPtr<T> &&r) noexcept -> SharedPtr<T> & {
+auto SharedPtr<T>::operator=(SharedPtr<T> &&r)
+    noexcept -> SharedPtr<T> & {
   Clear();
 
   ptr = std::move(r.ptr);
@@ -100,7 +103,7 @@ void SharedPtr<T>::Swap(SharedPtr<T> &r) {
 }
 
 template <typename T>
-auto SharedPtr<T>::GetCount() const -> int {
+auto SharedPtr<T>::GetCount() const -> size_t {
   return (counter != nullptr) ? counter->GetCount(): 0;
 }
 
