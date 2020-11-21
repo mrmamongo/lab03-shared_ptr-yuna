@@ -92,7 +92,7 @@ class SharedPtr {
 
  private:
   void AddPoint(){
-      if(counter) {
+      if (counter) {
         counter->AddPointer();
       }
   }
