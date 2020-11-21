@@ -24,8 +24,9 @@ class s_ptr_counter {
         ptr = nullptr;
         if (counter == 0){
           delete this;
-        } else
+        } else {
           --counter;
+        }
       }
   }
 
