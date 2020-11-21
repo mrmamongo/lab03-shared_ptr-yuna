@@ -10,9 +10,8 @@
  */
 template <typename T>
 SharedPtr<T>::SharedPtr<typename T>() noexcept
-    : ptr(nullptr), counter(nullptr) {
+    : ptr(nullptr), counter(nullptr) {}
 
-}
 template <typename T>
 SharedPtr<T>::SharedPtr<typename T>(T *p) {
   std::unique_ptr<T> temp(p);
