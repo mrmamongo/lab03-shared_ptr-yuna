@@ -20,14 +20,15 @@ class s_ptr_counter {
   }
 
   void Clear() {
-      if (ptr != nullptr) {
-        ptr = nullptr;
+
         if (counter == 0){
+          if (ptr != nullptr) {
+            ptr = nullptr;
+          }
           delete this;
         } else {
           --counter;
         }
-      }
   }
 
   auto GetCount() -> size_t {
