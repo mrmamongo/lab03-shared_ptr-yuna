@@ -9,11 +9,11 @@
  * =================CONSTRUCTORS=================
  */
 template <typename T>
-SharedPtr<T>::SharedPtr<T>() noexcept
+SharedPtr<T>::SharedPtr() noexcept
     : ptr(nullptr), counter(nullptr) {}
 
 template <typename T>
-SharedPtr<T>::SharedPtr<T>(T *p) {
+SharedPtr<T>::SharedPtr(T *p) {
   std::unique_ptr<T> temp(p);
 
   counter = new s_ptr_counter<T>(temp.get());
@@ -22,13 +22,13 @@ SharedPtr<T>::SharedPtr<T>(T *p) {
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr<T>(SharedPtr<T> &&r) noexcept {
+SharedPtr<T>::SharedPtr(SharedPtr<T> &&r) noexcept {
   ptr = std::move(r.ptr);
   counter = std::move(r.counter);
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr<T>(const SharedPtr<T> &r)
+SharedPtr<T>::SharedPtr(const SharedPtr<T> &r)
     : ptr(r.ptr), counter(r.counter) {
   AddPoint();
 }
