@@ -96,7 +96,7 @@ class SharedPtr {
   }
 
   void Clear() {
-    if (counter != nullptr) {
+    if (counter) {
       counter->Clear();
     }
   }

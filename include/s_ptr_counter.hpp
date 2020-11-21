@@ -20,13 +20,9 @@ class s_ptr_counter {
   }
 
   void Clear() {
-        if (counter == 0){
-          if (ptr != nullptr) {
-            ptr = nullptr;
-          }
+        if(--counter) {
+          delete ptr;
           delete this;
-        } else {
-          --counter;
         }
   }
 
