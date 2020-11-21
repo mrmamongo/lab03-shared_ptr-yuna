@@ -1,178 +1,37 @@
-# Лабораторная работа № 1
+# Лабораторная работа №3
 
-## Задание
+### Задание
 
-Реализовать утилиту табличного вывода массива данных, хранящихся в файле формата **JSON**.<br />
+**SharedPtr** реализует подсчет ссылок на ресурс. Ресурс освободится тогда, когда счетчик ссылок на него будет равен 0. Как видно, система реализует одно из основных правил сборщика мусора.
+Многопоточное программирование сложно представить без использования класса `shared_ptr`. Например, класс `scoped_refptr` (аналог `std::shared_ptr`) используется в Chromium [32,753 раз](https://cs.chromium.org/search/?q=scoped_refptr&sq=package:chromium&type=cs). Чтобы лучше усвоить и понять принцип работы этого "умного" указателя, необходимо его реализовать своими руками.
 
-В качестве аргумента утилите передается путь в к файлу, который в ключе `items`<br />
-содержит массив объектов, каждый объект из которых имеет следующие ключи:<br />
-`name` - фамилия и имя студента (строчный тип)<br />
-`group` - номер группы (строчный/целочисленный тип)<br />
-`avg` - средний балл (строчный/целочисленный/вещественный тип)<br />
-`debt` - список задолженностей (строчный/перечислительный тип)<br />
-
-## Иллюстрация
-
-Рассмотрим на примере **students.json** файл содержащий описание 3 студентов.
-
-```json
-{
-  "items": [
-    {
-      "name": "Ivanov Petr",
-      "group": "1",
-      "avg": "4.25",
-      "debt": null
-    },
-    {
-      "name": "Sidorov Ivan",
-      "group": 31,
-      "avg": 4,
-      "debt": "C++"
-    },
-    {
-      "name": "Pertov Nikita",
-      "group": "IU8-31",
-      "avg": 3.33,
-      "debt": [
-        "C++",
-        "Linux",
-        "Network"
-      ]
-    }
-  ],
-  "_meta": {
-    "count": 3
-  }
-}
-```
-
-И иллюстрацию того, что должна вывести программа после обработки данного файла.
-```sh
-# ./parser students.json
-
-| name          | group  | avg  | debt          |
-|---------------|--------|------|---------------|
-| Ivanov Petr   | 1      | 4.25 | null          |
-|---------------|--------|------|---------------|
-| Sidorov Ivan  | 31     | 4.00 | C++           |
-|---------------|--------|------|---------------|
-| Pertov Nikita | IU8-31 | 3.33 | 3 items       |
-|---------------|--------|------|---------------|
-```
-
-## Требования
-
-При разработке утилиты `parser` необходимо учесть следующие моменты:
-
-- Реализовать проверку входных данных:
-  * наличия аргумента, содержащего путь к файлу
-  * существования файла
-  * `items is array`
-  * `_meta.count == len(items)`
-- Вывод ошибок должен быть информативным
-- При написание тестов учесть сценарии с различными типами для полей (`group`, `avg`, `debt`)
-
-## Подсказки
-
-Для парсинга **JSON** файла стоит воспользоваться библиотекой `nlohmann_json`,
-подключив ее через пакетный менеджер **Hunter**.
+Реализуйте шаблон класса `SharedPtr`. Для счетчика ссылок используйте переменную класса `std::atomic_uint`. Интерфейс работы с этим классом аналогичен работе с переменной типа `unsigned int`, т.е. к нему применимы операции префиксного инкремента и декремента.
 
 ```cpp
-// include/student.hpp
+template <typename T>
+class SharedPtr {
+public:
+    SharedPtr();
+    SharedPtr(T* ptr);
+    SharedPtr(const SharedPtr& r);
+    SharedPtr(SharedPtr&& r);
+    ~SharedPtr();
+    auto operator=(const SharedPtr& r) -> SharedPtr&;
+    auto operator=(SharedPtr&& r) -> SharedPtr&;
 
-struct Student {
-    std::string name;
-    std::any group;
-    std::any avg;
-    std::any debt;
-}
+    // проверяет, указывает ли указатель на объект
+    operator bool() const;
+    auto operator*() const -> T&;
+    auto operator->() const -> T*;
+    
+    auto get() -> T*;
+    void reset();
+    void reset(T* ptr);
+    void swap(SharedPtr& r);
+    // возвращает количество объектов SharedPtr, которые ссылаются на тот же управляемый объект
+    auto use_count() const -> size_t;
+};
 ```
 
-```cpp
-// sources/student.cpp
-
-using nlohmann::json;
-
-void from_json(const json& j, student_t& s) {
-
-    s.name = get_name(j.at("group"));
-    s.group = get_group(j.at("group"));
-    s.avg = get_avg(j.at("avg"));
-    s.debt = get_group(j.at("debt"));
-}
-
-auto get_name(const json& j) -> std::string {
-    return j.get<std::string>();
-}
-
-auto get_debt(const json& j) -> std::any {
-    if (j.is_null())
-        return nullptr;
-    else if (j.is_string())
-        return j.get<std::string>();
-    else
-        return j.get<std::vector<std::string> >();
-}
-
-auto get_avg(const json& j) -> std::any {
-    if (j.is_null())
-        return nullptr;
-    else if (j.is_string())
-        return j.get<std::string>();
-    else if (j.is_number_float())
-        return j.get<double>();
-    else
-        return j.get<std::size_t>();
-}
-
-auto get_group(const json& j) -> std::any {
-    if (j.is_string())
-        return = j.get<std::string>();
-    else
-        return j.get<std::size_t>();
-}
-```
-
-```cpp
-// sources/main.cpp
-
-int main() {
-    //...
-    std::ifstream file{jsonPath};
-    if (!file) {
-        throw std::runtime_error{"unable to open json: " + jsonPath};
-    }
-
-    json data;
-    file >> data;
-
-    std::vector<student_t> students;
-    for (auto const& item : data.at("items")) {
-        auto student = item.get<student_t>()
-        students.push_back(student);
-    }
-    //...
-    print(students, std::cout);
-}
-
-void print(const std::vector<student_t>& students, std::ostream& os) {
-
-    //...
-    for (auto const& student : students) {
-        print(student, os);
-    }
-}
-void print(const student_t& student, std::ostream& os) {
-    //...
-    if (student.debt.type() == typeid(std::nullptr_t)) {
-        os << "null";
-    } else if (student.debt.type() == typeid(std::string)) {
-        os << std::any_cast<std::string>(student.debt);
-    } else {
-        os
-          << std::any_cast<std::vector<std::string> >(student.debt).size()
-          << " items";
-    }
-}
-```
+### Рекомендации
+Подробное объяснение об устройстве `shared_ptr` можно прочитать в книге "Эффективный и современный С++" Скотта Мейерса или на соответсвующей лекции по Алгоритмическим Языкам. 
