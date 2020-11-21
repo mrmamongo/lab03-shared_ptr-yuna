@@ -17,7 +17,7 @@ using std::string;
 template <typename T>
 class SharedPtr {
  public:
-  SharedPtr() noexcept: ptr(nullptr), counter(nullptr) {}
+  SharedPtr() noexcept;
 
   explicit SharedPtr(T* p);
 
