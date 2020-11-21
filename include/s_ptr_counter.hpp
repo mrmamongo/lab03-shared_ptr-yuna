@@ -1,0 +1,40 @@
+//
+// Created by lamp on 20.11.2020.
+//
+
+#ifndef SHARED_PTR_S_PTR_COUNTER_HPP
+#define SHARED_PTR_S_PTR_COUNTER_HPP
+#pragma once
+#include <atomic>
+#include <memory>
+#include <vector>
+
+template <typename T>
+class s_ptr_counter {
+ public:
+  s_ptr_counter(T* p): ptr(p), counter(1) {};
+
+  void AddPointer() {
+      ++counter;
+  };
+
+  void Clear() {
+      if (ptr != nullptr) {
+        ptr = nullptr;
+        if (counter == 0){
+          delete this;
+        } else --counter;
+      }
+  };
+
+  auto GetCount() -> size_t {
+    return counter.load();
+  }
+
+ private:
+  T* ptr;
+  std::atomic<size_t> counter;
+};
+
+
+#endif  // SHARED_PTR_S_PTR_COUNTER_HPP
