@@ -36,6 +36,7 @@ class SharedPtr {
   }
   ~SharedPtr(){
       Clear();
+      delete this;
   }
   auto operator=(const SharedPtr& r)  -> SharedPtr& {
       Clear();
