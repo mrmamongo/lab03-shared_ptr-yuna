@@ -6,6 +6,12 @@
 #include "SharedPtr.hpp"
 
 
+TEST(SharedPtr_Test, Nullptr_Test) {
+SharedPtr<int> nullPointer;
+
+EXPECT_FALSE(nullPointer);
+}
+
 TEST(SharedPtr_Test, Counter_Test) {
   int value = 5;
 

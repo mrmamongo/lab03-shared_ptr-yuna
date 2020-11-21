@@ -19,89 +19,32 @@ class SharedPtr {
  public:
   SharedPtr() noexcept: ptr(nullptr), counter(nullptr) {}
 
-  explicit SharedPtr(T* p){
-      std::unique_ptr<T> temp(p);
+  explicit SharedPtr(T* p);
 
-      counter = new s_ptr_counter<T>(temp.get());
+  SharedPtr(const SharedPtr& r);
+  SharedPtr(SharedPtr&& r)  noexcept;
 
-      ptr = temp.release();
-  }
-  SharedPtr(const SharedPtr& r): ptr(r.ptr), counter(r.counter){
-    AddPoint();
-  }
-  SharedPtr(SharedPtr&& r)  noexcept{
-      ptr = r.ptr;
-      counter = r.counter;
-      AddPoint();
-  }
-  ~SharedPtr() noexcept{
-      Clear();
-  }
-  auto operator=(const SharedPtr& r) noexcept -> SharedPtr& {
-      Clear();
-
-      ptr = r.ptr;
-      counter = r.counter;
-
-      AddPoint();
-
-      return *this;
-  }
-  auto operator=(SharedPtr&& r)   noexcept -> SharedPtr&{
-      Clear();
-
-      ptr = r.ptr;
-      counter = r.counter;
-
-      AddPoint();
-
-      return *this;
-  }
+  ~SharedPtr() noexcept;
+  auto operator=(const SharedPtr& r) noexcept -> SharedPtr&;
+  auto operator=(SharedPtr&& r)   noexcept -> SharedPtr&;
 
   // проверяет, указывает ли указатель на объект
-  explicit operator bool() const {
-      return (ptr!= nullptr);
-  } // ?? Указатель должен быть удалён сразу,
+  explicit operator bool() const;// ?? Указатель должен быть удалён сразу,
                          // как только счётчик становится равен 0
 
-  auto operator*() const -> T& {
-      return *(ptr);
-  }
-  auto operator->() const -> T* {
-      return ptr;
-  }
+  auto operator*() const -> T&;
+  auto operator->() const -> T*;
 
-  auto Get() const -> T* {
-      return ptr;
-  }
-  void Swap(SharedPtr& r) {
-      T* temp_p = std::move(ptr);
-      s_ptr_counter<T>* temp_counter = std::move(counter);
-
-      ptr = std::move(r.ptr);
-      counter = std::move(r.counter);
-
-      r.ptr = std::move(temp_p);
-      r.counter = std::move(temp_counter);
-  }
+  auto Get() const -> T*;
+  void Swap(SharedPtr& r);
   // возвращает количество объектов SharedPtr,
   // которые ссылаются на тот же управляемый объект
-  auto GetCount() const -> size_t {
-      return (counter != nullptr) ? counter->GetCount(): 0;
-  }
+  auto GetCount() const -> size_t;
 
  private:
-  void AddPoint(){
-      if (counter) {
-        counter->AddPointer();
-      }
-  }
+  void AddPoint();
 
-  void Clear() {
-    if (counter) {
-      counter->Clear();
-    }
-  }
+  void Clear();
 
  private:
   T* ptr;
