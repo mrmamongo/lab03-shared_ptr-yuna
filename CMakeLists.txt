@@ -26,7 +26,7 @@ string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
 
-add_library(shared_ptr STATIC
+add_library(shared_ptr
   # enum your files and delete this comment
   ${CMAKE_CURRENT_SOURCE_DIR}/sources/SharedPtr.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/sources/s_ptr_counter.cpp
