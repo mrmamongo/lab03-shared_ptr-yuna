@@ -10,7 +10,7 @@ void s_ptr_counter<T>::AddPointer() noexcept {
 }
 
 template <typename T>
-auto s_ptr_counter<T>::GetCount() const noexcept -> int {
+auto s_ptr_counter<T>::GetCount() const noexcept -> size_t {
   return counter.load();
 }
 
