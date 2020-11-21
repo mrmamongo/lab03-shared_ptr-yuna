@@ -7,7 +7,7 @@
 
 
 TEST(SharedPtr_Test, Nullptr_Test) {
-SharedPtr<int> nullPointer;
+  SharedPtr<int> nullPointer;
 
 EXPECT_FALSE(nullPointer);
 }
