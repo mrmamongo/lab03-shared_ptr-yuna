@@ -1,6 +1,7 @@
 //
 // Created by lamp on 20.11.2020.
 //
+// Copyright 2020 mrmamongo
 
 #ifndef SHARED_PTR_S_PTR_COUNTER_HPP
 #define SHARED_PTR_S_PTR_COUNTER_HPP
@@ -12,20 +13,22 @@
 template <typename T>
 class s_ptr_counter {
  public:
-  s_ptr_counter(T* p): ptr(p), counter(1) {};
+ explicit s_ptr_counter(T* p): ptr(p), counter(1) {};
 
   void AddPointer() {
       ++counter;
-  };
+  }
 
   void Clear() {
       if (ptr != nullptr) {
         ptr = nullptr;
         if (counter == 0){
           delete this;
-        } else --counter;
+        }
+        else
+          --counter;
       }
-  };
+  }
 
   auto GetCount() -> size_t {
     return counter.load();
