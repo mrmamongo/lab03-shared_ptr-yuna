@@ -20,7 +20,7 @@ class s_ptr_counter {
   }
 
   void Clear() {
-        if(--counter) {
+        if (--counter) {
           delete ptr;
           delete this;
         }
