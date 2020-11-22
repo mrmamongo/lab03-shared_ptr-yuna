@@ -81,21 +81,3 @@ template <typename T>
 auto SharedPtr<T>::GetCount() const -> size_t {
   return (counter != nullptr) ? counter->GetCount(): 0;
 }
-
-/*
- * =================PRIVATE METHODS==============
- */
-
-template <typename T>
-void SharedPtr<T>::AddPoint() {
-  if (counter) {
-    counter->AddPointer();
-  }
-}
-
-template <typename T>
-void SharedPtr<T>::Clear() {
-  if (counter) {
-    counter->Clear();
-  }
-}

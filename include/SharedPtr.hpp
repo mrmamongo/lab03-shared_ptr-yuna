@@ -55,9 +55,17 @@ class SharedPtr {
   auto GetCount() const -> size_t;
 
  private:
-  void AddPoint();
+  void AddPoint(){
+    if (counter) {
+      counter->AddPointer();
+    }
+  }
 
-  void Clear();
+  void Clear(){
+    if (counter) {
+      counter->Clear();
+    }
+  }
 
  private:
   T* ptr;
