@@ -2,7 +2,7 @@
 // Created by lamp on 20.11.2020.
 //
 // Copyright 2020 mrmamongo
-#include "../include/SharedPtr.hpp"
+#include "SharedPtr.hpp"
 
 
 /*
@@ -13,29 +13,9 @@ SharedPtr<T>::SharedPtr() noexcept
     : ptr(nullptr), counter(nullptr) {}
 
 template <typename T>
-SharedPtr<T>::SharedPtr(T *p) {
-  std::unique_ptr<T> temp(p);
-
-  counter = new s_ptr_counter<T>(temp.get());
-
-  ptr = temp.release();
-}
-
-template <typename T>
 SharedPtr<T>::SharedPtr(SharedPtr<T> &&r) noexcept {
   ptr = std::move(r.ptr);
   counter = std::move(r.counter);
-}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr<T> &r)
-    : ptr(r.ptr), counter(r.counter) {
-  AddPoint();
-}
-
-template <typename T>
-SharedPtr<T>::~SharedPtr<T>() noexcept {
-  Clear();
 }
 /*
  * =================OPERATORS====================
@@ -75,10 +55,6 @@ auto SharedPtr<T>::operator*() const -> T & {
   return *(ptr);
 }
 
-template <typename T>
-auto SharedPtr<T>::operator->() const -> T * {
-  return ptr;
-}
 
 /*
  * =================PUBLIC METHODS===============

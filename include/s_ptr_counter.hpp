@@ -3,8 +3,8 @@
 //
 // Copyright 2020 mrmamongo
 
-#ifndef SHARED_PTR_S_PTR_COUNTER_HPP
-#define SHARED_PTR_S_PTR_COUNTER_HPP
+#ifndef SHARED_PTR_S_PTR_COUNTER_HPP_
+#define SHARED_PTR_S_PTR_COUNTER_HPP_
 #pragma once
 #include <atomic>
 #include <memory>
@@ -27,4 +27,4 @@ class s_ptr_counter {
 };
 
 
-#endif  // SHARED_PTR_S_PTR_COUNTER_HPP
+#endif  // SHARED_PTR_S_PTR_COUNTER_HPP_

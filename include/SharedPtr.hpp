@@ -19,12 +19,23 @@ class SharedPtr {
  public:
   SharedPtr() noexcept;
 
-  explicit SharedPtr(T* p);
+  explicit SharedPtr(T* p){
+    std::unique_ptr<T> temp(p);
 
-  SharedPtr(const SharedPtr& r);
+    counter = new s_ptr_counter<T>(temp.get());
+
+    ptr = temp.release();
+  }
+
+  SharedPtr(const SharedPtr& r)
+      : ptr(r.ptr), counter(r.counter) {
+    AddPoint();
+  }
   SharedPtr(SharedPtr&& r)  noexcept;
 
-  ~SharedPtr() noexcept;
+  ~SharedPtr() noexcept{
+    Clear();
+  }
   auto operator=(const SharedPtr& r) noexcept -> SharedPtr&;
   auto operator=(SharedPtr&& r)   noexcept -> SharedPtr&;
 
@@ -33,7 +44,9 @@ class SharedPtr {
                          // как только счётчик становится равен 0
 
   auto operator*() const -> T&;
-  auto operator->() const -> T*;
+  auto operator->() const -> T*{
+    return ptr;
+  }
 
   auto Get() const -> T*;
   void Swap(SharedPtr& r);
