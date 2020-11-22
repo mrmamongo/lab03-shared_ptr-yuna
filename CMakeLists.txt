@@ -28,16 +28,13 @@ find_package(GTest CONFIG REQUIRED)
 
 add_library(shared_ptr INTERFACE
   # enum your files and delete this comment
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/SharedPtr.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/s_ptr_counter.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/SharedPtr.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/s_ptr_counter.hpp
 )
 add_executable(tests
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/SharedPtr_Test.cpp
 )
 
-target_include_directories(shared_ptr
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
 target_include_directories(tests
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
