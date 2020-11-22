@@ -26,7 +26,9 @@ class s_ptr_counter {
     }
   }
 
-  auto GetCount() const noexcept -> size_t;
+  auto GetCount() const noexcept -> size_t{
+    return counter.load();
+  }
 
  private:
   T* ptr;
