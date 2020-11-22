@@ -18,7 +18,7 @@ template <typename T>
 class SharedPtr {
  public:
   SharedPtr() noexcept
-      : ptr(nullptr), counter(nullptr) {};
+      : ptr(nullptr), counter(nullptr) {}
 
   explicit SharedPtr(T* p){
     std::unique_ptr<T> temp(p);
