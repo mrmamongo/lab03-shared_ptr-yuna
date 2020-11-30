@@ -6,11 +6,12 @@
 #ifndef INCLUDE_SHAREDPTR_HPP_
 #define INCLUDE_SHAREDPTR_HPP_
 
-#include <vector>
 #include <memory>
-#include "s_ptr_counter.hpp"
 #include <string>
 #include <utility>
+#include <vector>
+
+#include "SPtrCounter.hpp"
 
 using std::string;
 
@@ -23,7 +24,7 @@ class SharedPtr {
   explicit SharedPtr(T* p){
     std::unique_ptr<T> temp(p);
 
-    counter = new s_ptr_counter<T>(temp.get());
+    counter = new SPtrCounter<T>(temp.get());
 
     ptr = temp.release();
   }
@@ -32,6 +33,7 @@ class SharedPtr {
       : ptr(r.ptr), counter(r.counter) {
     AddPoint();
   }
+
   SharedPtr(SharedPtr&& r)  noexcept{
     ptr = std::move(r.ptr);
     counter = std::move(r.counter);
@@ -42,23 +44,27 @@ class SharedPtr {
   }
 
   auto operator=(const SharedPtr& r) noexcept -> SharedPtr&{
-    Clear();
+    if (r != this) {
+      Clear();
 
-    ptr = r.ptr;
-    counter = r.counter;
+      ptr = r.ptr;
+      counter = r.counter;
 
-    AddPoint();
+      AddPoint();
 
-    return *this;
+      return *this;
+    }
   }
 
   auto operator=(SharedPtr&& r)   noexcept -> SharedPtr&{
-    Clear();
+    if (r != this) {
+      Clear();
 
-    ptr = std::move(r.ptr);
-    counter = std::move(r.counter);
+      ptr = std::move(r.ptr);
+      counter = std::move(r.counter);
 
-    return *this;
+      return *this;
+    }
   }
 
   // проверяет, указывает ли указатель на объект
@@ -81,7 +87,7 @@ class SharedPtr {
 
   void Swap(SharedPtr& r){
     T* temp_p = std::move(ptr);
-    s_ptr_counter<T>* temp_counter = std::move(counter);
+    SPtrCounter<T>* temp_counter = std::move(counter);
 
     ptr = std::move(r.ptr);
     counter = std::move(r.counter);
@@ -111,7 +117,7 @@ class SharedPtr {
 
  private:
   T* ptr;
-  s_ptr_counter<T>* counter;
+  SPtrCounter<T>* counter;
 };
 
 #endif  // INCLUDE_SHAREDPTR_HPP_
