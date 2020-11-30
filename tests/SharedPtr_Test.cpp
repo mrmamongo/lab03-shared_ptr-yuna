@@ -122,17 +122,11 @@ TEST(SharedPtr_Test, Test_STLContainer) {
   std::vector<int> values { 1, 2, 3, 4, 5};
   std::vector<MyClass> objects {
       MyClass
-      (
-          10, "First"
-          ),
+      (10, "First"),
       MyClass
-      (
-          5, "Second"
-          ),
+      (5, "Second"),
       MyClass
-      (
-      0, "Last"
-          )
+      (0, "Last")
   };
 
   SharedPtr<std::vector<int>> pvalues(&values);
@@ -214,12 +208,12 @@ TEST(SharedPtr_Test, Swap_TestCustomType) {
       5, "Second"
   };
 
-  SharedPtr<MyClass> pobject1_1 (&firstObject);
-  SharedPtr<MyClass> pobject1_2 (pobject1_1);
+  SharedPtr<MyClass> pobject1_1(&firstObject);
+  SharedPtr<MyClass> pobject1_2(pobject1_1);
 
-  SharedPtr<MyClass> pobject2_1 (&secondObject);
-  SharedPtr<MyClass> pobject2_2 (pobject2_1);
-  SharedPtr<MyClass> pobject2_3 (pobject2_2);
+  SharedPtr<MyClass> pobject2_1(&secondObject);
+  SharedPtr<MyClass> pobject2_2(pobject2_1);
+  SharedPtr<MyClass> pobject2_3(pobject2_2);
 
   pobject1_1.Swap(pobject2_1);
 
