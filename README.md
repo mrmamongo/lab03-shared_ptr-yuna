@@ -2,7 +2,7 @@
 
 | branch | status |
 |--------|--------|
-| Travis |![Branch Status](https://github.com/mrmamongo/lab03-shared_ptr-yuna/workflows/CI/badge.svg?branch=Travis)https://github.com/mrmamongo/lab03-shared_ptr-yuna/actions/runs/392075212|
+| Travis |[![Branch Status](https://github.com/mrmamongo/lab03-shared_ptr-yuna/workflows/CI/badge.svg?branch=Travis)](https://github.com/mrmamongo/lab03-shared_ptr-yuna/actions/runs/392075212)|
 ### Задание
 
 **SharedPtr** реализует подсчет ссылок на ресурс. Ресурс освободится тогда, когда счетчик ссылок на него будет равен 0. Как видно, система реализует одно из основных правил сборщика мусора.
