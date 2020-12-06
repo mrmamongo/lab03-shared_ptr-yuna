@@ -251,7 +251,7 @@ TEST(ErrorTest, TestAssignable) {
 
     SharedPtr<NotAssignable> pointer(&notAssignableObject);
     SharedPtr<NotAssignable> error;
-  } catch (std::runtime_error& er){
+  } catch(std::runtime_error& er){
     string ref = "ERROR: Not assignable type!";
     EXPECT_EQ( ref, er.what());
   }
@@ -274,7 +274,7 @@ TEST(ErrorTest, TestAssignableOperator) {
 
     SharedPtr<NotAssignable> pointer(&notAssignableObject);
     SharedPtr<NotAssignable> error = std::move(pointer);
-  } catch (std::runtime_error& er){
+  } catch(std::runtime_error& er){
     string ref = "ERROR: Not assignable type!";
     EXPECT_EQ( ref, er.what());
   }
