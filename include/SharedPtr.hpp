@@ -23,53 +23,68 @@ class SharedPtr {
 
   explicit SharedPtr(T* p){
     std::unique_ptr<T> temp(p);
-
     counter = new SPtrCounter<T>(temp.get());
 
     ptr = temp.release();
   }
 
   SharedPtr(const SharedPtr& r)
-      : ptr(r.ptr), counter(r.counter) {
-    AddPoint();
+  {
+    if (std::is_move_constructible<T>::value ) {
+      ptr = r.ptr;
+      counter = r.counter;
+      counter->AddPointer();
+    } else {
+      throw std::runtime_error("ERROR: Not copiable type!");
+    }
   }
 
-  SharedPtr(SharedPtr&& r)  noexcept{
-    ptr = std::move(r.ptr);
-    counter = std::move(r.counter);
+  SharedPtr(SharedPtr&& r) {
+    if (std::is_move_assignable<T>::value) {
+      std::swap(ptr, r.ptr);
+      std::swap(counter, r.counter);
+    }  else {
+      throw std::runtime_error("ERROR: Not assignable type!");
+    }
   }
 
   ~SharedPtr() noexcept{
     Clear();
   }
 
-  auto operator=(const SharedPtr& r) noexcept -> SharedPtr&{
-    if (r != this) {
+  auto operator=(const SharedPtr& r) -> SharedPtr&{
+    if (std::is_move_constructible<T>::value && &r != this) {
       Clear();
 
       ptr = r.ptr;
       counter = r.counter;
 
       AddPoint();
-
-      return *this;
+    } else if ( &r == this ) {
+      std::cout << "The object you want to copy is equal to this\n";
+    } else {
+      throw std::runtime_error("ERROR: Not copiable type!");
     }
+    return *this;
   }
 
-  auto operator=(SharedPtr&& r)   noexcept -> SharedPtr&{
-    if (r != this) {
+  auto operator=(SharedPtr&& r) -> SharedPtr&{
+    if (std::is_move_assignable<T>::value && &r != this) {
       Clear();
 
       ptr = std::move(r.ptr);
       counter = std::move(r.counter);
-
-      return *this;
+    } else if (&r == this) {
+      std::cout << "The object you want to assign is equal to this\n";
+    } else {
+      throw std::runtime_error("ERROR: Not assignable type!");
     }
+    return *this;
   }
 
   // проверяет, указывает ли указатель на объект
   explicit operator bool() const{
-    return (ptr!= nullptr);
+    return (ptr != nullptr);
   }// ?? Указатель должен быть удалён сразу,
                          // как только счётчик становится равен 0
 
@@ -81,35 +96,29 @@ class SharedPtr {
     return ptr;
   }
 
-  auto Get() const -> T*{
+  inline auto Get() const -> T*{
     return ptr;
   }
 
-  void Swap(SharedPtr& r){
-    T* temp_p = std::move(ptr);
-    SPtrCounter<T>* temp_counter = std::move(counter);
-
-    ptr = std::move(r.ptr);
-    counter = std::move(r.counter);
-
-    r.ptr = std::move(temp_p);
-    r.counter = std::move(temp_counter);
+  inline void Swap(SharedPtr& r){
+    std::swap(ptr, r.ptr);
+    std::swap(counter, r.counter);
   }
 
   // возвращает количество объектов SharedPtr,
   // которые ссылаются на тот же управляемый объект
-  auto GetCount() const -> size_t{
+  inline auto GetCount() const -> size_t{
     return (counter != nullptr) ? counter->GetCount(): 0;
   }
 
  private:
-  void AddPoint(){
+ inline void AddPoint(){
     if (counter) {
       counter->AddPointer();
     }
   }
 
-  void Clear(){
+ inline void Clear(){
     if (counter) {
       counter->Clear();
     }

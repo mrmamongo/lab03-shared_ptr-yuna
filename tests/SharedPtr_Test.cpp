@@ -48,7 +48,7 @@ MyClass FooClass_Link(MyClass& object){
 
 
 
-TEST(SharedPtr_Test, Test_Nullptr) {
+TEST(SharedPtrTest, TestNullptr) {
   SharedPtr<int> nullPointer;
   SharedPtr<MyClass> nullObjectPointer;
   SharedPtr<std::vector<int>> nullVectorIntPointer;
@@ -61,7 +61,7 @@ TEST(SharedPtr_Test, Test_Nullptr) {
   EXPECT_FALSE(nullVectorMyClassPointer);
 }
 
-TEST(SharedPtr_Test, Test_TempType) {
+TEST(SharedPtrTest, TestTempType) {
   int value = 5;
 
   SharedPtr<int> pvalue1(&value);
@@ -86,7 +86,7 @@ TEST(SharedPtr_Test, Test_TempType) {
   EXPECT_EQ(*pvalue2, 25);
 }
 
-TEST(SharedPtr_Test, Test_CustomType) {
+TEST(SharedPtrTest, TestCustomType) {
   MyClass testObject;
 
   SharedPtr<MyClass> pobject1(&testObject);
@@ -118,7 +118,7 @@ TEST(SharedPtr_Test, Test_CustomType) {
       MyClass(100500800, "Foo_Link"));
 }
 
-TEST(SharedPtr_Test, Test_STLContainer) {
+TEST(SharedPtrTest, TestSTLContainer) {
   std::vector<int> values { 1, 2, 3, 4, 5};
   std::vector<MyClass> objects {
       MyClass
@@ -179,7 +179,7 @@ TEST(SharedPtr_Test, Test_STLContainer) {
   EXPECT_TRUE(pobjects3);
 }
 
-TEST(SharedPtr_Test, Swap_Test_TempType) {
+TEST(SharedPtrTest, SwapTestTempType) {
   int firstValue = 5;
 
   SharedPtr<int> pvalue1_1(&firstValue);
@@ -200,7 +200,7 @@ TEST(SharedPtr_Test, Swap_Test_TempType) {
   EXPECT_EQ(*pvalue2_1, 5);
 }
 
-TEST(SharedPtr_Test, Swap_TestCustomType) {
+TEST(SharedPtrTest, SwapTestCustomType) {
   MyClass firstObject {
       10, "First"
   };
@@ -224,7 +224,58 @@ TEST(SharedPtr_Test, Swap_TestCustomType) {
   EXPECT_EQ(*pobject2_1, MyClass(10, "First"));
 }
 
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+class NotCopiable {
+ public:
+  NotCopiable& operator= (NotCopiable&) = delete;
+};
+
+TEST(ErrorTest, TestCopiable) {
+  try {
+    NotCopiable notCopiableObject;
+    SharedPtr<NotCopiable> pointer(&notCopiableObject);
+    SharedPtr<NotCopiable> error(pointer);
+  } catch (std::runtime_error& er) {
+    string ref = "ERROR: Not copiable type!";
+    EXPECT_EQ(ref, er.what());
+  }
+}
+
+class NotAssignable {
+ public:
+  NotAssignable& operator= (NotAssignable&&) = delete;
+};
+
+TEST(ErrorTest, TestAssignable) {
+  try{
+    NotAssignable notAssignableObject;
+
+    SharedPtr<NotAssignable> pointer(&notAssignableObject);
+    SharedPtr<NotAssignable> error;
+  } catch (std::runtime_error& er){
+    string ref = "ERROR: Not assignable type!";
+    EXPECT_EQ( ref, er.what());
+  }
+}
+
+TEST(ErrorTest, TestCopiableOperator) {
+  try {
+    NotCopiable notCopiableObject;
+    SharedPtr<NotCopiable> pointer(&notCopiableObject);
+    SharedPtr<NotCopiable> error = pointer;
+  } catch (std::runtime_error& er) {
+    string ref = "ERROR: Not copiable type!";
+    EXPECT_EQ(ref, er.what());
+  }
+}
+
+TEST(ErrorTest, TestAssignableOperator) {
+  try{
+    NotAssignable notAssignableObject;
+
+    SharedPtr<NotAssignable> pointer(&notAssignableObject);
+    SharedPtr<NotAssignable> error = std::move(pointer);
+  } catch (std::runtime_error& er){
+    string ref = "ERROR: Not assignable type!";
+    EXPECT_EQ( ref, er.what());
+  }
 }
